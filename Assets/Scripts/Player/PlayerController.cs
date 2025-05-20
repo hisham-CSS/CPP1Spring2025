@@ -160,6 +160,14 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Pickup"))
             Destroy(collision.gameObject);
+
+        if (collision.CompareTag("Squish") && rb.linearVelocityY < 0)
+        {
+            collision.enabled = false;
+            collision.gameObject.GetComponentInParent<Enemy>().TakeDamage(9999, DamageType.JumpedOn);
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+        }
     }
     public void OnTriggerExit2D(Collider2D collision)
     {

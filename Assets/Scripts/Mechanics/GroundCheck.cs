@@ -12,9 +12,6 @@ public class GroundCheck
     private Rigidbody2D rb;
     private float groundCheckRadius;
 
-    //private property to get the ground check position
-    private Vector2 groundCheckPos => new Vector2(collider.bounds.min.x + collider.bounds.extents.x, collider.bounds.min.y);
-
     //Constructor to initialize the GroundCheck class
     public GroundCheck(LayerMask isGroundLayer, Collider2D collider, Rigidbody2D rb, ref float groundCheckRadius)
     {
@@ -32,4 +29,9 @@ public class GroundCheck
 
         return isGrounded;
     }
+
+    //private property to get the ground check position
+    private Vector2 groundCheckPos => new Vector2(collider.bounds.min.x + collider.bounds.extents.x, collider.bounds.min.y);
+    //Overlap check to see if the player is touching the ground
+    private bool OverlapCircle() => Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, isGroundLayer);
 }
