@@ -44,38 +44,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Speed has been changed to: " + speed);
     }
 
-    private int lives = 3;
-    public int Lives
-    {
-        get
-        {
-            return lives;
-        }
-        set
-        {
-            if (value < 0)
-            {
-                GameOver();
-                return;
-            }
-            if (lives > value)
-            {
-                Respawn();
-            }
-            lives = value;
-            Debug.Log("Lives have been set to: " + lives);
-        }
-    }
-
-    private void Respawn()
-    {
-        Debug.Log("Respawn goes here");
-    }
-
-    private void GameOver()
-    {
-        Debug.Log("Game Over goes here");
-    }
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -120,6 +89,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && groundCheck.IsGrounded)
         {
             rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+        }
+
+        if (rb.linearVelocityY > 0 && Input.GetButtonDown("Fire2"))
+        {
+            anim.SetTrigger("JumpAttack");
         }
 
         //apply changes to look
@@ -178,4 +152,6 @@ public class PlayerController : MonoBehaviour
     {
         
     }
+
+    public void IncreaseGravity() => rb.gravityScale = 5.0f;
 }

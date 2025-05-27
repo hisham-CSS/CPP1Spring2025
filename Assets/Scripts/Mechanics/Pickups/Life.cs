@@ -15,5 +15,5 @@ public class Life : Pickups
         rb.linearVelocity = new Vector2(-2, rb.linearVelocity.y);
     }
 
-    public override void OnPickup(GameObject player) => player.GetComponent<PlayerController>().Lives++;
+    public override void OnPickup(GameObject player) => GameManager.Instance.Lives++;
 }

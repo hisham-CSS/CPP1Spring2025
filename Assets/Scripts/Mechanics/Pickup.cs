@@ -21,7 +21,7 @@ public class Pickup : MonoBehaviour
             switch (pickupType)
             {
                 case PickupType.Life:
-                    pc.Lives++; //increment player lives
+                    GameManager.Instance.Lives++; //increment the player's lives
                     break;
                 case PickupType.Powerup:
                     pc.SpeedChange(); //call the speed change method
