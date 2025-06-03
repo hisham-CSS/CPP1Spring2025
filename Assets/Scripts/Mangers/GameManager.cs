@@ -1,10 +1,15 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public delegate PlayerController PlayerControllerDelegate(PlayerController playerInstance);
     public event PlayerControllerDelegate OnPlayerControllerCreated;
+
+    public event Action<int> OnLivesChanged;
+    
 
     #region Singleton Pattern
     private static GameManager _instance;
@@ -51,6 +56,7 @@ public class GameManager : MonoBehaviour
                 Respawn();
             }
             lives = value;
+            OnLivesChanged?.Invoke(lives);
             Debug.Log("Lives have been set to: " + lives);
         }
     }
@@ -112,4 +118,6 @@ public class GameManager : MonoBehaviour
         currentCheckpoint = checkpointPos;
         Debug.Log("Checkpoint set at: " + currentCheckpoint);
     }
+    
+
 }
