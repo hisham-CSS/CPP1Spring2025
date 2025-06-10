@@ -16,4 +16,5 @@ public class Life : Pickups
     }
 
     public override void OnPickup(GameObject player) => GameManager.Instance.Lives++;
+    
 }

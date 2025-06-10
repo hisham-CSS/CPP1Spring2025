@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer), typeof(Animator))]
 [RequireComponent(typeof(Collider2D))]
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip jumpSound;
+    public AudioClip stompSound;
+
     //Public modifiable properties
     [Range(3, 10)]
     public float speed = 6.0f;
@@ -18,8 +20,11 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer sr;
     private Animator anim;
     private GroundCheck groundCheck;
+    private AudioSource audioSource;
 
     private Coroutine speedChange = null;
+
+
 
     public void SpeedChange()
     {
@@ -53,6 +58,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+
         groundCheck = new GroundCheck(LayerMask.GetMask("Ground"), GetComponent<Collider2D>(), rb, ref groundCheckRadius);
 
         //SetLives(GetLives() + 1);
@@ -89,6 +96,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && groundCheck.IsGrounded)
         {
             rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            audioSource.PlayOneShot(jumpSound);
         }
 
         if (rb.linearVelocityY > 0 && Input.GetButtonDown("Fire2"))
@@ -141,6 +149,7 @@ public class PlayerController : MonoBehaviour
             collision.gameObject.GetComponentInParent<Enemy>().TakeDamage(9999, DamageType.JumpedOn);
             rb.linearVelocity = Vector2.zero;
             rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            audioSource.PlayOneShot(stompSound);
         }
     }
     public void OnTriggerExit2D(Collider2D collision)

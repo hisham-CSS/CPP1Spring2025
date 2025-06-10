@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -56,6 +55,7 @@ public class GameManager : MonoBehaviour
                 Respawn();
             }
             lives = value;
+
             OnLivesChanged?.Invoke(lives);
             Debug.Log("Lives have been set to: " + lives);
         }

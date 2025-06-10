@@ -8,6 +8,8 @@ public abstract class Enemy : MonoBehaviour
     //protected - Private but also accessable by subclasses
     //public - Public variables are are party, everyone is invited to modify and change these values
 
+    public AudioClip deathSound;
+
     protected SpriteRenderer sr;
     protected Animator anim;
     protected int health;
@@ -31,6 +33,7 @@ public abstract class Enemy : MonoBehaviour
         if (health <= 0)
         {
             anim.SetTrigger("Death");
+            GetComponent<AudioSource>().PlayOneShot(deathSound);
 
             if (transform.parent != null) 
                 Destroy(transform.parent.gameObject, 0.5f);

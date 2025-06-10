@@ -2,9 +2,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
+using Unity.VisualScripting;
 
 public class CanvasManager : MonoBehaviour
 {
+    public AudioMixer mixer;
+
     [Header("Buuttons")]
     public Button startBtn;
     public Button quitBtn;
@@ -19,11 +23,15 @@ public class CanvasManager : MonoBehaviour
     public GameObject hudCanvas;
 
     [Header("Text")]
-    public TMP_Text volSliderText;
+    public TMP_Text masterVolSliderText;
+    public TMP_Text musicVolSliderText;
+    public TMP_Text sfxVolSliderText;
     public TMP_Text livesText;
 
     [Header("Sliders")]
-    public Slider volSlider;
+    public Slider masterVolSlider;
+    public Slider musicVolSlider;
+    public Slider sfxVolSlider;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -40,25 +48,43 @@ public class CanvasManager : MonoBehaviour
 
         if (returnToMenu) returnToMenu.onClick.AddListener(() => ChangeScene("Title"));
 
-        if (volSlider)
-        {
-            volSlider.onValueChanged.AddListener(OnVolSliderChanged);
-            OnVolSliderChanged(volSlider.value); // Initialize the text with the current slider value
-        }
-
         if (livesText)
         {
             GameManager.Instance.OnLivesChanged += UpdateLivesText;
             UpdateLivesText(GameManager.Instance.Lives); // Initialize the text with the current lives value
         }
+
+        if (masterVolSlider)
+        {
+            SetupSliderInformation(masterVolSlider, masterVolSliderText, "MasterVol");
+            OnSliderValueChanged(masterVolSlider.value, masterVolSlider, masterVolSliderText, "MasterVol"); // Initialize the text with the current value
+        }
+        if (musicVolSlider)
+        {
+            SetupSliderInformation(musicVolSlider, musicVolSliderText, "MusicVol");
+            OnSliderValueChanged(musicVolSlider.value, musicVolSlider, musicVolSliderText, "MusicVol"); // Initialize the text with the current value
+        }
+        if (sfxVolSlider)
+        {
+            SetupSliderInformation(sfxVolSlider, sfxVolSliderText, "SFXVol");
+            OnSliderValueChanged(sfxVolSlider.value, sfxVolSlider, sfxVolSliderText, "SFXVol"); // Initialize the text with the current value
+        }
+
+    }
+
+    private void SetupSliderInformation(Slider slider, TMP_Text sliderText, string parameterName)
+    { 
+        slider.onValueChanged.AddListener((value) => OnSliderValueChanged(value, slider, sliderText, parameterName));
+    }
+
+    private void OnSliderValueChanged(float value, Slider slider, TMP_Text sliderText, string parameterName)
+    {
+        value = (value == 0) ? -80 : Mathf.Log10(slider.value) * 20; // Convert to decibels
+        sliderText.text = (value == -80) ? "0%" : $"{(int)(slider.value * 100)}%";
+        mixer.SetFloat(parameterName, value);
     }
 
     private void UpdateLivesText(int value) => livesText.text = $"Lives: {value}";
-    private void OnVolSliderChanged(float valueChanged)
-    {
-       float roundedValue = Mathf.Round(valueChanged * 100);
-       if (volSliderText) volSliderText.text = $"{roundedValue}%";
-    }
 
     public void ChangeScene(string sceneName)
     {
