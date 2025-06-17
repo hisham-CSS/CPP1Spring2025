@@ -30,6 +30,8 @@ public class WalkerEnemy : Enemy
 
     private void Update()
     {
+        if (Time.timeScale <= 0) return;
+
         AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
         if (stateInfo.IsName("Walk"))

@@ -42,11 +42,18 @@ public class CanvasManager : MonoBehaviour
         
         if (backBtn)
         {
-            if (SceneManager.GetActiveScene().name == "Game") backBtn.onClick.AddListener(() => SetMenus(hudCanvas, pauseMenuCanvas));
+            if (SceneManager.GetActiveScene().name == "Game") backBtn.onClick.AddListener(() => {
+                SetMenus(hudCanvas, pauseMenuCanvas);
+                Time.timeScale = 1f; // Resume the game
+            });
             else backBtn.onClick.AddListener(() => SetMenus(mainMenuCanvas, settingsCanvas));
         }
 
-        if (returnToMenu) returnToMenu.onClick.AddListener(() => ChangeScene("Title"));
+        if (returnToMenu) returnToMenu.onClick.AddListener(() => 
+        { 
+            ChangeScene("Title");
+            Time.timeScale = 1f; // Ensure time scale is reset when returning to the main menu
+        });
 
         if (livesText)
         {
@@ -122,10 +129,12 @@ public class CanvasManager : MonoBehaviour
             if (pauseMenuCanvas.activeSelf)
             {
                 SetMenus(hudCanvas, pauseMenuCanvas);
+                Time.timeScale = 1f; // Resume the game
             }
             else
             {
                 SetMenus(pauseMenuCanvas, hudCanvas);
+                Time.timeScale = 0f; // Pause the game
             }
         }
     }

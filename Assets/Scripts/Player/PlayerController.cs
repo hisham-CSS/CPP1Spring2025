@@ -70,6 +70,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale <= 0) return; //if the game is paused, we do not want to update the player
+
         AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0);
         //Update our ground check
         groundCheck.CheckIsGrounded();
